@@ -1,0 +1,8 @@
+# virtual environments
+/venv
+
+
+# folders
+**/temp
+.idea/
+**/__pycache__/
