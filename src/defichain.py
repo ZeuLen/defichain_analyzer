@@ -22,13 +22,6 @@ class Defichain:
         self.init_config_parser()
 
     def init_config_parser(self):
-        import os
-        cwd = os.getcwd()
-        files = os.listdir(cwd)
-
-        logging.info(f"The current working directory is: {cwd}")
-        logging.info(f"The current files in working directory: {files}")
-
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
         logging.info(f"{self.config.sections()}")
