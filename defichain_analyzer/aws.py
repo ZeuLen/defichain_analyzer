@@ -5,14 +5,17 @@ from typing import List
 
 import boto3
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(threadName)s %(name)s %(message)s")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(threadName)s %(name)s %(message)s",
+)
 
 
 class BucketManager:
-    """Class with functionality for managing aws infrastructure using boto3"""
+    """Class with functionality for managing aws s3 buckets using boto3"""
 
     def __init__(self, cfg: ConfigParser):
-        self.client = boto3.client('s3')
+        self.client = boto3.client("s3")
         self.today = date.today()
         self.config = cfg
 
@@ -33,11 +36,13 @@ class BucketManager:
         else:
             return False
 
-    def create_object(self, object_prefix: str, bucket: str = "defichain-analyzer") -> None:
+    def create_object(
+        self, object_prefix: str, bucket: str = "defichain-analyzer"
+    ) -> None:
         """
         Create bucket object in case it does not exist
         """
-        self.client.put_object(Bucket=bucket, Key=(object_prefix + '/'))
+        self.client.put_object(Bucket=bucket, Key=(object_prefix + "/"))
 
     def create_bucket_objects(self, bucket: str = "defichain-analyzer") -> None:
         """
@@ -46,8 +51,11 @@ class BucketManager:
         year, month, day = self.today.year, self.today.month, self.today.day
         date_path = f"{year}/{month}/{day}"
 
-        _objects = [self.config["AWS"]["TOKENS_PREFIX"], self.config["AWS"]["POOL_PAIRS_PREFIX"],
-                    self.config["AWS"]["YIELD_FARMING_PREFIX"]]
+        _objects = [
+            self.config["AWS"]["TOKENS_PREFIX"],
+            self.config["AWS"]["POOL_PAIRS_PREFIX"],
+            self.config["AWS"]["YIELD_FARMING_PREFIX"],
+        ]
         objects = [f"{o}{date_path}/" for o in _objects]
 
         for obj in objects:
@@ -57,4 +65,3 @@ class BucketManager:
                 self.create_object(object_prefix=obj, bucket=bucket)
             else:
                 logging.info(f"{obj} already exists...")
-

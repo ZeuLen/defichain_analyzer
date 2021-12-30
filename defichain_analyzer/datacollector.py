@@ -6,10 +6,13 @@ from datetime import date
 import pandas as pd
 import requests
 
-from utils import execute_transformation
+from helpers import execute_transformation
 
 TODAY = date.today()
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(threadName)s %(name)s %(message)s")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(threadName)s %(name)s %(message)s",
+)
 
 
 @dataclass
@@ -19,7 +22,7 @@ class Datacollector:
     def __post_init__(self) -> None:
         """Additional initialization without overriding dataclass init"""
         self.config = configparser.ConfigParser()
-        self.config.read('config.ini')
+        self.config.read("config.ini")
 
     @property
     def tokens(self) -> pd.DataFrame:
@@ -27,7 +30,17 @@ class Datacollector:
         token_endpoint = self.config["API"]["token_endpoint"]
         r = requests.get(token_endpoint)
         ret_list = execute_transformation(r)
-        ret_cols = ["id", "symbol", "name", "mintable", "tradeable", "isDAT", "isLPS", "isLoanToken", "minted"]
+        ret_cols = [
+            "id",
+            "symbol",
+            "name",
+            "mintable",
+            "tradeable",
+            "isDAT",
+            "isLPS",
+            "isLoanToken",
+            "minted",
+        ]
         return pd.DataFrame(ret_list)[ret_cols]
 
     @property
@@ -51,7 +64,7 @@ class Datacollector:
         from io import StringIO
         import boto3
 
-        s3_resource = boto3.resource('s3')
+        s3_resource = boto3.resource("s3")
         year, month, day = TODAY.year, TODAY.month, TODAY.day
         date_path = f"{year}/{month}/{day}"
 

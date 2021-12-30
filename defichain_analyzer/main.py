@@ -7,7 +7,7 @@ from datacollector import Datacollector
 def main() -> None:
     # load config file
     config = configparser.ConfigParser()
-    config.read('config.ini')
+    config.read("config.ini")
 
     # create required buckets
     resource_manager = BucketManager(config)
@@ -18,5 +18,5 @@ def main() -> None:
     defichain_collector.persist_csv_to_s3()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
