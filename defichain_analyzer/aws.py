@@ -5,10 +5,7 @@ from typing import List
 
 import boto3
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(threadName)s %(name)s %(message)s",
-)
+logger = logging.getLogger("root")
 
 
 class BucketManager:
@@ -61,7 +58,7 @@ class BucketManager:
         for obj in objects:
             object_exists = self.check_object_existence(bucket_object=obj)
             if not object_exists:
-                logging.info(f"{obj} is being created...")
+                logger.info(f"{obj} is being created...")
                 self.create_object(object_prefix=obj, bucket=bucket)
             else:
-                logging.info(f"{obj} already exists...")
+                logger.info(f"{obj} already exists...")

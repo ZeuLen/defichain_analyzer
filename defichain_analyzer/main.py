@@ -1,19 +1,23 @@
 import configparser
 
+import log
 from aws import BucketManager
-from datacollector import Datacollector
+from data_collector import Datacollector
+
+logger = log.setup_custom_logger("root")
 
 
 def main() -> None:
-    # load config file
+    logger.info("Starting to retrieve defichain data...")
+
+    logger.info("Reading configuration...")
     config = configparser.ConfigParser()
     config.read("config.ini")
 
-    # create required buckets
+    logger.info("Reading configuration...")
     resource_manager = BucketManager(config)
     resource_manager.create_bucket_objects()
 
-    # retrieve defichain data and write to aws
     defichain_collector = Datacollector()
     defichain_collector.persist_csv_to_s3()
 

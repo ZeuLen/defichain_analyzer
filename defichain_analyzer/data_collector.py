@@ -9,20 +9,19 @@ import requests
 from helpers import execute_transformation
 
 TODAY = date.today()
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(threadName)s %(name)s %(message)s",
-)
+logger = logging.getLogger("root")
 
 
-@dataclass
+@dataclass()
 class Datacollector:
     """Data class to load and write data for the Defichain DEX"""
 
-    def __post_init__(self) -> None:
-        """Additional initialization without overriding dataclass init"""
-        self.config = configparser.ConfigParser()
-        self.config.read("config.ini")
+    config: configparser.ConfigParser = None
+
+    def __post_init__(self,):
+        if self.config is None:
+            self.config = configparser.ConfigParser()
+            self.config.read("config.ini")
 
     @property
     def tokens(self) -> pd.DataFrame:
@@ -78,4 +77,4 @@ class Datacollector:
             prefix = f"{df_names[i]}/{date_path}/"
             file_name = f"{prefix}{df_names[i]}_{str(TODAY).replace('-', '_')}.csv"
             s3_resource.Object(bucket, file_name).put(Body=csv_buffer.getvalue())
-            logging.info(f"{file_name} was successfully uploaded")
+            logger.info(f"{file_name} was successfully uploaded")
